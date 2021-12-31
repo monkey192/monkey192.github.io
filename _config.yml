@@ -105,4 +105,4 @@ deploy:
   type: 'git'
   repo: git@github.com:monkey192/monkey192.github.io.git
   branch: master
-  message: 'Commit'
+  message: 'Public site'
