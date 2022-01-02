@@ -291,6 +291,80 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
 
 
   
+    <article id="post-docker-swarm-elk-stack" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/12/28/docker-swarm-elk-stack/" class="article-date">
+  <time class="dt-published" datetime="2021-12-28T07:12:09.000Z" itemprop="datePublished">2021-12-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/12/28/docker-swarm-elk-stack/">Using elk stack for monitoring docker swarm service</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>初めてContainerで動くのシステムを構築しましたので、<br>経験がなかったので、調べながら開発進めました。<br>色々新技術を勉強できました。楽しかった！！！<br>担当したモジュールの<code>監視系</code>機能をメモに残したいと思います</p>
+<h3 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
+<ul>
+<li><code>E</code>lasticsearch</li>
+<li><code>L</code>ogstash</li>
+<li><code>K</code>ibana</li>
+</ul>
+<p><img src="elk-stack-elkb-diagram.svg" alt="ELK"></p>
+<h3 id="構成"><a href="#構成" class="headerlink" title="構成"></a>構成</h3><p>ELKの構成は以下のように構成されています。</p>
+<ol>
+<li>ログ集めてlogstashに転送する. ELK Stackなら Beatと呼ばれる</li>
+<li>logstashで待ち受けて、データ加工・解析</li>
+<li>elasticsearchデータベースに書き出す</li>
+<li>Kibanaでelasticsearchのデータをベースに可視化できる</li>
+</ol>
+<p><img src="elk-stack-elkb-architech.png" alt="ELK"></p>
+<h2 id="事例"><a href="#事例" class="headerlink" title="事例"></a>事例</h2><p>On-premisesにDocker swarm serviceで構築した案件を参加させいただきました。<br>Masterノード: 1台<br>Workノード: 3、4台<br>コンテナ数: 6(ELK除く)</p>
+<h4 id="問題："><a href="#問題：" class="headerlink" title="問題："></a>問題：</h4><p>開始する時に以下のような要件があります。</p>
+<ul>
+<li>コンテナとして動いてるため、落ちるとログが残さない</li>
+<li>アプリケーションログを永久化にしたい</li>
+<li>特殊エラーなどの時Alertを送りたい</li>
+<li>アクセス頻度、バッチ進捗などはvisualizeしたい</li>
+<li>…</li>
+</ul>
+<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので利用になります。</p>
+<ul>
+<li>Container log: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-container.html">Filebeat’s Container Input</a></li>
+</ul>
+<h4 id="注意：-TBD"><a href="#注意：-TBD" class="headerlink" title="注意：(TBD)"></a>注意：(TBD)</h4><p>あった問題：</p>
+<ul>
+<li>Logstash file output: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html">https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html</a></li>
+<li>…</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/" data-id="ckxwx7x5u00008rosbnm05412" data-title="Using elk stack for monitoring docker swarm service" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elkstack/" rel="tag">elkstack</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-about-ms-932" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/12/22/about-ms-932/" class="article-date">
@@ -352,7 +426,7 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ms932/" rel="tag">Ms932</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unicode/" rel="tag">Unicode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-swarm/" rel="tag">docker-swarm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heml/" rel="tag">heml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ms932/" rel="tag">Ms932</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unicode/" rel="tag">Unicode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-swarm/" rel="tag">docker-swarm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elkstack/" rel="tag">elkstack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heml/" rel="tag">heml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
     </div>
   </div>
 
@@ -362,7 +436,7 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Ms932/" style="font-size: 10px;">Ms932</a> <a href="/tags/Unicode/" style="font-size: 10px;">Unicode</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/docker-swarm/" style="font-size: 10px;">docker-swarm</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/heml/" style="font-size: 10px;">heml</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a>
+      <a href="/tags/Ms932/" style="font-size: 10px;">Ms932</a> <a href="/tags/Unicode/" style="font-size: 10px;">Unicode</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/docker-swarm/" style="font-size: 10px;">docker-swarm</a> <a href="/tags/elkstack/" style="font-size: 10px;">elkstack</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/heml/" style="font-size: 10px;">heml</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a>
     </div>
   </div>
 
@@ -400,7 +474,7 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
           </li>
         
           <li>
-            <a href="/2021/12/22/about-ms-932/">About MS 932</a>
+            <a href="/2021/12/28/docker-swarm-elk-stack/">Using elk stack for monitoring docker swarm service</a>
           </li>
         
       </ul>

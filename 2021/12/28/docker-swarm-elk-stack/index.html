@@ -4,20 +4,24 @@
   <meta charset="utf-8">
   
   
-  <title>HEML 超まとめ | Monkey Blog</title>
+  <title>Using elk stack for monitoring docker swarm service | Monkey Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="The basic of heml">
+  <meta name="description" content="初めてContainerで動くのシステムを構築しましたので、経験がなかったので、調べながら開発進めました。色々新技術を勉強できました。楽しかった！！！担当したモジュールの監視系機能をメモに残したいと思います ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組み合わせてログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。  Elas">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HEML 超まとめ">
-<meta property="og:url" content="https://monkey192.github.io/2021/12/31/helm-basic/index.html">
+<meta property="og:title" content="Using elk stack for monitoring docker swarm service">
+<meta property="og:url" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/index.html">
 <meta property="og:site_name" content="Monkey Blog">
-<meta property="og:description" content="The basic of heml">
+<meta property="og:description" content="初めてContainerで動くのシステムを構築しましたので、経験がなかったので、調べながら開発進めました。色々新技術を勉強できました。楽しかった！！！担当したモジュールの監視系機能をメモに残したいと思います ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組み合わせてログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。  Elas">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-12-31T04:31:27.000Z">
-<meta property="article:modified_time" content="2021-12-31T05:11:39.781Z">
+<meta property="og:image" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/elk-stack-elkb-diagram.svg">
+<meta property="og:image" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/elk-stack-elkb-architech.png">
+<meta property="article:published_time" content="2021-12-28T07:12:09.000Z">
+<meta property="article:modified_time" content="2022-01-02T07:56:45.451Z">
 <meta property="article:author" content="Monkey192">
-<meta property="article:tag" content="heml">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="elkstack">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/elk-stack-elkb-diagram.svg">
   
     <link rel="alternate" href="/atom.xml" title="Monkey Blog" type="application/atom+xml">
   
@@ -78,10 +82,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-helm-basic" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-docker-swarm-elk-stack" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2021/12/31/helm-basic/" class="article-date">
-  <time class="dt-published" datetime="2021-12-31T04:31:27.000Z" itemprop="datePublished">2021-12-31</time>
+    <a href="/2021/12/28/docker-swarm-elk-stack/" class="article-date">
+  <time class="dt-published" datetime="2021-12-28T07:12:09.000Z" itemprop="datePublished">2021-12-28</time>
 </a>
     
   </div>
@@ -92,7 +96,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      HEML 超まとめ
+      Using elk stack for monitoring docker swarm service
     </h1>
   
 
@@ -100,16 +104,49 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>The basic of heml</p>
+        <p>初めてContainerで動くのシステムを構築しましたので、<br>経験がなかったので、調べながら開発進めました。<br>色々新技術を勉強できました。楽しかった！！！<br>担当したモジュールの<code>監視系</code>機能をメモに残したいと思います</p>
+<h3 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
+<ul>
+<li><code>E</code>lasticsearch</li>
+<li><code>L</code>ogstash</li>
+<li><code>K</code>ibana</li>
+</ul>
+<p><img src="elk-stack-elkb-diagram.svg" alt="ELK"></p>
+<h3 id="構成"><a href="#構成" class="headerlink" title="構成"></a>構成</h3><p>ELKの構成は以下のように構成されています。</p>
+<ol>
+<li>ログ集めてlogstashに転送する. ELK Stackなら Beatと呼ばれる</li>
+<li>logstashで待ち受けて、データ加工・解析</li>
+<li>elasticsearchデータベースに書き出す</li>
+<li>Kibanaでelasticsearchのデータをベースに可視化できる</li>
+</ol>
+<p><img src="elk-stack-elkb-architech.png" alt="ELK"></p>
+<h2 id="事例"><a href="#事例" class="headerlink" title="事例"></a>事例</h2><p>On-premisesにDocker swarm serviceで構築した案件を参加させいただきました。<br>Masterノード: 1台<br>Workノード: 3、4台<br>コンテナ数: 6(ELK除く)</p>
+<h4 id="問題："><a href="#問題：" class="headerlink" title="問題："></a>問題：</h4><p>開始する時に以下のような要件があります。</p>
+<ul>
+<li>コンテナとして動いてるため、落ちるとログが残さない</li>
+<li>アプリケーションログを永久化にしたい</li>
+<li>特殊エラーなどの時Alertを送りたい</li>
+<li>アクセス頻度、バッチ進捗などはvisualizeしたい</li>
+<li>…</li>
+</ul>
+<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので利用になります。</p>
+<ul>
+<li>Container log: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-container.html">Filebeat’s Container Input</a></li>
+</ul>
+<h4 id="注意：-TBD"><a href="#注意：-TBD" class="headerlink" title="注意：(TBD)"></a>注意：(TBD)</h4><p>あった問題：</p>
+<ul>
+<li>Logstash file output: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html">https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html</a></li>
+<li>…</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://monkey192.github.io/2021/12/31/helm-basic/" data-id="ckxu0dv91000329osgrrj8fau" data-title="HEML 超まとめ" class="article-share-link">Share</a>
+      <a data-url="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/" data-id="ckxwx7x5u00008rosbnm05412" data-title="Using elk stack for monitoring docker swarm service" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heml/" rel="tag">heml</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elkstack/" rel="tag">elkstack</a></li></ul>
 
     </footer>
   </div>
@@ -117,19 +154,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2021/12/31/create-hexo-page/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/12/30/valid-k8s-doc-file/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Using Hexo for creating your github pages
+          How to valid your K8S manifest file
         
       </div>
     </a>
   
   
-    <a href="/2021/12/30/valid-k8s-doc-file/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/12/22/about-ms-932/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">How to valid your K8S manifest file</div>
+      <div class="article-nav-title">About MS 932</div>
     </a>
   
 </nav>
