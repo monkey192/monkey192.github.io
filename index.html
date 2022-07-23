@@ -460,8 +460,9 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>初めてContainerで動くのシステムを構築しましたので、<br>経験がなかったので、調べながら開発進めました。<br>色々新技術を勉強できました。楽しかった！！！<br>担当したモジュールの<code>監視系</code>機能をメモに残したいと思います</p>
-<h3 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
+        <p>Containerで動くのシステムを構築する案件に参加しまして、<br>経験がなかったので、調査しながら開発を進めていきました。<br>色々新技術を勉強できまして楽しかった！！！</p>
+<p>担当したモジュールは　コンテナ・システム全体を<code>監視 / Monitoring</code>機能を展開するのです。<br>忘れないうちに、自分用のメモを残したいと思います。</p>
+<h2 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h2><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
 <ul>
 <li><code>E</code>lasticsearch</li>
 <li><code>L</code>ogstash</li>
@@ -476,16 +477,16 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
 <li>Kibanaでelasticsearchのデータをベースに可視化できる</li>
 </ol>
 <p><img src="elk-stack-elkb-architech.png" alt="ELK"></p>
-<h2 id="事例"><a href="#事例" class="headerlink" title="事例"></a>事例</h2><p>On-premisesにDocker swarm serviceで構築した案件を参加させいただきました。<br>Masterノード: 1台<br>Workノード: 3、4台<br>コンテナ数: 6(ELK除く)</p>
-<h4 id="問題："><a href="#問題：" class="headerlink" title="問題："></a>問題：</h4><p>開始する時に以下のような要件があります。</p>
+<h2 id="システム構成"><a href="#システム構成" class="headerlink" title="システム構成"></a>システム構成</h2><p>On-premisesにDocker swarm の利用でシステムを構築する<br>Masterノード: 1台<br>Workノード: 3〜4台<br>コンテナ合計: 6(ELK除く)</p>
+<h4 id="あったIssueと解決"><a href="#あったIssueと解決" class="headerlink" title="あったIssueと解決"></a>あったIssueと解決</h4><p>開始する時に以下のような要件が出ました</p>
 <ul>
-<li>コンテナとして動いてるため、落ちるとログが残さない</li>
+<li>コンテナとして動いてるため、コンテナ停止したらログが残さない</li>
 <li>アプリケーションログを永久化にしたい</li>
-<li>特殊エラーなどの時Alertを送りたい</li>
+<li>特殊エラーなどの時に警告メールで通知</li>
 <li>アクセス頻度、バッチ進捗などはvisualizeしたい</li>
 <li>…</li>
 </ul>
-<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので利用になります。</p>
+<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので採用になります。</p>
 <ul>
 <li>Container log: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-container.html">Filebeat’s Container Input</a></li>
 </ul>
@@ -494,6 +495,7 @@ secretsで <code>db_root_password</code>の秘密データを定義されます�
 <li>Logstash file output: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html">https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html</a></li>
 <li>…</li>
 </ul>
+<p>おさらい<br>。。。（時間があるとき、もっと書きますように）</p>
 
       
     </div>

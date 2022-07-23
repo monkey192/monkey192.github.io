@@ -6,17 +6,17 @@
   
   <title>Using elk stack for monitoring docker swarm service | Monkey Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="初めてContainerで動くのシステムを構築しましたので、経験がなかったので、調べながら開発進めました。色々新技術を勉強できました。楽しかった！！！担当したモジュールの監視系機能をメモに残したいと思います ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組み合わせてログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。  Elas">
+  <meta name="description" content="Containerで動くのシステムを構築する案件に参加しまして、経験がなかったので、調査しながら開発を進めていきました。色々新技術を勉強できまして楽しかった！！！ 担当したモジュールは　コンテナ・システム全体を監視 &#x2F; Monitoring機能を展開するのです。忘れないうちに、自分用のメモを残したいと思います。 ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Using elk stack for monitoring docker swarm service">
 <meta property="og:url" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/index.html">
 <meta property="og:site_name" content="Monkey Blog">
-<meta property="og:description" content="初めてContainerで動くのシステムを構築しましたので、経験がなかったので、調べながら開発進めました。色々新技術を勉強できました。楽しかった！！！担当したモジュールの監視系機能をメモに残したいと思います ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組み合わせてログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。  Elas">
+<meta property="og:description" content="Containerで動くのシステムを構築する案件に参加しまして、経験がなかったので、調査しながら開発を進めていきました。色々新技術を勉強できまして楽しかった！！！ 担当したモジュールは　コンテナ・システム全体を監視 &#x2F; Monitoring機能を展開するのです。忘れないうちに、自分用のメモを残したいと思います。 ELK Stackってなんのものだ？ELK StackはみつのOpenSourceを組">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/elk-stack-elkb-diagram.svg">
 <meta property="og:image" content="https://monkey192.github.io/2021/12/28/docker-swarm-elk-stack/elk-stack-elkb-architech.png">
 <meta property="article:published_time" content="2021-12-28T07:12:09.000Z">
-<meta property="article:modified_time" content="2022-01-02T07:56:45.451Z">
+<meta property="article:modified_time" content="2022-07-23T07:03:56.723Z">
 <meta property="article:author" content="Monkey192">
 <meta property="article:tag" content="docker">
 <meta property="article:tag" content="elkstack">
@@ -104,8 +104,9 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>初めてContainerで動くのシステムを構築しましたので、<br>経験がなかったので、調べながら開発進めました。<br>色々新技術を勉強できました。楽しかった！！！<br>担当したモジュールの<code>監視系</code>機能をメモに残したいと思います</p>
-<h3 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h3><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
+        <p>Containerで動くのシステムを構築する案件に参加しまして、<br>経験がなかったので、調査しながら開発を進めていきました。<br>色々新技術を勉強できまして楽しかった！！！</p>
+<p>担当したモジュールは　コンテナ・システム全体を<code>監視 / Monitoring</code>機能を展開するのです。<br>忘れないうちに、自分用のメモを残したいと思います。</p>
+<h2 id="ELK-Stackってなんのものだ？"><a href="#ELK-Stackってなんのものだ？" class="headerlink" title="ELK Stackってなんのものだ？"></a>ELK Stackってなんのものだ？</h2><p><a target="_blank" rel="noopener" href="https://www.elastic.co/what-is/elk-stack">ELK Stack</a>はみつのOpenSourceを組み合わせて<br>ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。</p>
 <ul>
 <li><code>E</code>lasticsearch</li>
 <li><code>L</code>ogstash</li>
@@ -120,16 +121,16 @@
 <li>Kibanaでelasticsearchのデータをベースに可視化できる</li>
 </ol>
 <p><img src="elk-stack-elkb-architech.png" alt="ELK"></p>
-<h2 id="事例"><a href="#事例" class="headerlink" title="事例"></a>事例</h2><p>On-premisesにDocker swarm serviceで構築した案件を参加させいただきました。<br>Masterノード: 1台<br>Workノード: 3、4台<br>コンテナ数: 6(ELK除く)</p>
-<h4 id="問題："><a href="#問題：" class="headerlink" title="問題："></a>問題：</h4><p>開始する時に以下のような要件があります。</p>
+<h2 id="システム構成"><a href="#システム構成" class="headerlink" title="システム構成"></a>システム構成</h2><p>On-premisesにDocker swarm の利用でシステムを構築する<br>Masterノード: 1台<br>Workノード: 3〜4台<br>コンテナ合計: 6(ELK除く)</p>
+<h4 id="あったIssueと解決"><a href="#あったIssueと解決" class="headerlink" title="あったIssueと解決"></a>あったIssueと解決</h4><p>開始する時に以下のような要件が出ました</p>
 <ul>
-<li>コンテナとして動いてるため、落ちるとログが残さない</li>
+<li>コンテナとして動いてるため、コンテナ停止したらログが残さない</li>
 <li>アプリケーションログを永久化にしたい</li>
-<li>特殊エラーなどの時Alertを送りたい</li>
+<li>特殊エラーなどの時に警告メールで通知</li>
 <li>アクセス頻度、バッチ進捗などはvisualizeしたい</li>
 <li>…</li>
 </ul>
-<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので利用になります。</p>
+<h4 id="ソリューション："><a href="#ソリューション：" class="headerlink" title="ソリューション："></a>ソリューション：</h4><p>調べながら開発進めました。<br>その時は ELK Stackがよく出てたので採用になります。</p>
 <ul>
 <li>Container log: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-container.html">Filebeat’s Container Input</a></li>
 </ul>
@@ -138,6 +139,7 @@
 <li>Logstash file output: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html">https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html</a></li>
 <li>…</li>
 </ul>
+<p>おさらい<br>。。。（時間があるとき、もっと書きますように）</p>
 
       
     </div>
