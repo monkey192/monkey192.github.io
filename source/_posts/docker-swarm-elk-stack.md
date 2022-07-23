@@ -5,12 +5,14 @@ tags:
     - docker
     - elkstack
 ---
-初めてContainerで動くのシステムを構築しましたので、
-経験がなかったので、調べながら開発進めました。
-色々新技術を勉強できました。楽しかった！！！
-担当したモジュールの`監視系`機能をメモに残したいと思います
+Containerで動くのシステムを構築する案件に参加しまして、
+経験がなかったので、調査しながら開発を進めていきました。
+色々新技術を勉強できまして楽しかった！！！
 
-### ELK Stackってなんのものだ？
+担当したモジュールは　コンテナ・システム全体を`監視 / Monitoring`機能を展開するのです。
+忘れないうちに、自分用のメモを残したいと思います。
+
+## ELK Stackってなんのものだ？
 [ELK Stack](https://www.elastic.co/what-is/elk-stack)はみつのOpenSourceを組み合わせて
 ログ収集（アプリケーションログ, システムログなど）・分析・可視化のを提供されます。
 - `E`lasticsearch
@@ -28,26 +30,29 @@ ELKの構成は以下のように構成されています。
 
 ![ELK](elk-stack-elkb-architech.png)
 
-## 事例
-On-premisesにDocker swarm serviceで構築した案件を参加させいただきました。
+##　システム構成
+On-premisesにDocker swarm の利用でシステムを構築する
 Masterノード: 1台
-Workノード: 3、4台
-コンテナ数: 6(ELK除く)
+Workノード: 3〜4台
+コンテナ合計: 6(ELK除く)
 
-#### 問題：
-開始する時に以下のような要件があります。
-- コンテナとして動いてるため、落ちるとログが残さない
+#### あったIssueと解決
+開始する時に以下のような要件が出ました
+- コンテナとして動いてるため、コンテナ停止したらログが残さない
 - アプリケーションログを永久化にしたい
-- 特殊エラーなどの時Alertを送りたい
+- 特殊エラーなどの時に警告メールで通知
 - アクセス頻度、バッチ進捗などはvisualizeしたい
 - ...
 
 #### ソリューション：
 調べながら開発進めました。
-その時は ELK Stackがよく出てたので利用になります。
+その時は ELK Stackがよく出てたので採用になります。
 - Container log: [Filebeat's Container Input](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-container.html)
 
 #### 注意：(TBD)
 あった問題：
 - Logstash file output: https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html
 - ...
+
+おさらい
+。。。（時間があるとき、もっと書きますように）
