@@ -4,18 +4,19 @@
   <meta charset="utf-8">
   
   
-  <title>all-tags | Monkey Blog</title>
+  <title>k8s-volume | Monkey Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="DIY: my memo &amp; sharing">
-<meta property="og:type" content="website">
-<meta property="og:title" content="all-tags">
-<meta property="og:url" content="https://monkey192.github.io/all-tags/index.html">
+  <meta name="description" content="Contents Volumes in Kubernetes What differences between volume and persistenceVolume  Refer: Types of Kubernetes Volumes Volumes in KubernetesContainers are ephemeral by design, it means that anything">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s-volume">
+<meta property="og:url" content="https://monkey192.github.io/2022/07/26/k8s-volume/index.html">
 <meta property="og:site_name" content="Monkey Blog">
-<meta property="og:description" content="DIY: my memo &amp; sharing">
+<meta property="og:description" content="Contents Volumes in Kubernetes What differences between volume and persistenceVolume  Refer: Types of Kubernetes Volumes Volumes in KubernetesContainers are ephemeral by design, it means that anything">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-12-30T04:03:49.000Z">
-<meta property="article:modified_time" content="2021-12-31T05:10:33.607Z">
+<meta property="article:published_time" content="2022-07-26T00:48:44.000Z">
+<meta property="article:modified_time" content="2022-07-26T01:02:20.576Z">
 <meta property="article:author" content="Monkey192">
+<meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Monkey Blog" type="application/atom+xml">
@@ -77,10 +78,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="all-tags-" class="h-entry article article-type-all-tags" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-k8s-volume" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/all-tags/index.html" class="article-date">
-  <time class="dt-published" datetime="2021-12-30T04:03:49.000Z" itemprop="datePublished">2021-12-30</time>
+    <a href="/2022/07/26/k8s-volume/" class="article-date">
+  <time class="dt-published" datetime="2022-07-26T00:48:44.000Z" itemprop="datePublished">2022-07-26</time>
 </a>
     
   </div>
@@ -91,7 +92,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      all-tags
+      k8s-volume
     </h1>
   
 
@@ -99,18 +100,46 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <h3 id="Contents"><a href="#Contents" class="headerlink" title="Contents"></a>Contents</h3><ul>
+<li>Volumes in Kubernetes</li>
+<li>What differences between <code>volume</code> and <code>persistenceVolume</code></li>
+</ul>
+<p>Refer: <a target="_blank" rel="noopener" href="https://cloud.netapp.com/blog/cvo-blg-5-types-of-kubernetes-volumes-and-how-to-work-with-them">Types of Kubernetes Volumes</a></p>
+<h3 id="Volumes-in-Kubernetes"><a href="#Volumes-in-Kubernetes" class="headerlink" title="Volumes in Kubernetes"></a>Volumes in Kubernetes</h3><p>Containers are ephemeral by design, it means that anything which is stored in container will be lost when the container is stopped.<br>The might cause proplems with containers that need to persist their data<br>(eg: database, filestorage …)</p>
+<p>In k8s, a volume can be thought as a directory which is accesscible to the containers in a pod/</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://monkey192.github.io/all-tags/index.html" data-id="ckxu0dv94000529os9rw17kdm" data-title="all-tags" class="article-share-link">Share</a>
+      <a data-url="https://monkey192.github.io/2022/07/26/k8s-volume/" data-id="cl6a7p4ar0000qyosha5a8rr1" data-title="k8s-volume" class="article-share-link">Share</a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
     </footer>
   </div>
   
     
+<nav id="article-nav">
+  
+    <a href="/2022/08/01/docker-Q-A/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          docker Q&amp;A
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/02/23/s3-cli-cheatsheet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">s3-cli-cheatsheet</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
