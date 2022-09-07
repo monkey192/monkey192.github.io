@@ -101,7 +101,7 @@
       
         <h3 id="What-is-Basic-Authentication"><a href="#What-is-Basic-Authentication" class="headerlink" title="What is Basic Authentication?"></a>What is Basic Authentication?</h3><p>Basic authentication is a simple authentication schema build into the HTTP protocol.<br>The client sends HTTP request with the <code>Authorization</code> header that contains a base-64 encoded string from <code>username:password</code> values</p>
 <p>For example: <code>Authorization: Basic YXBpdXNlcjpDSUNhcGkwMQ==</code></p>
-<p>I have assinged this take so want to take a note for enabling basic authen in nginx</p>
+<p>I have assinged this task so want to take a note for enabling basic authen in nginx</p>
 <h3 id="How-to-enable-basic-authen-in-nginx"><a href="#How-to-enable-basic-authen-in-nginx" class="headerlink" title="How to enable basic authen in nginx"></a>How to enable basic authen in <code>nginx</code></h3><p>Refer nginx site in <a target="_blank" rel="noopener" href="https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/">here</a></p>
 <ul>
 <li><p>first, install <code>nginx</code> <a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
@@ -112,8 +112,8 @@
 <p>  test config: </p>
   <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br><span class="line">nginx: the configuration file /usr/<span class="built_in">local</span>/etc/nginx/nginx.conf syntax is ok</span><br></pre></td></tr></table></figure>
 <p>  reload nginx:</p>
-  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -s quit</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
-<p>  <img src="login_request.png" alt="Login request"><br>  <img src="login_success.png" alt="Login Success"></p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -s quit</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure></li>
+<li><p>Test your setting<br>  <img src="login_request.png" alt="Login request"><br>  <img src="login_success.png" alt="Login Success"></p>
 </li>
 </ul>
 <h3 id="Refer"><a href="#Refer" class="headerlink" title="Refer"></a>Refer</h3><ul>
