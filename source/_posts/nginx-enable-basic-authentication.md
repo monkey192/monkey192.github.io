@@ -33,6 +33,14 @@ Refer nginx site in [here](https://docs.nginx.com/nginx/admin-guide/security-con
     ```
 - Configuring nginx
     you can limit access to the whole website with basic authentication by specify the `auth_basic` directive at `server`
+    ```sh
+    server {
+        ...
+        auth_basic "Basic Auth";
+        auth_basic_user_file /usr/local/etc/nginx/.htpasswd;
+        ...
+    }
+    ```
 
     test config: 
     ```sh
