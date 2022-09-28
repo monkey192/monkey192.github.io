@@ -100,6 +100,16 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>in a project, we have to manage a Kubernetes on premise - not in cloud.<br>we need to give people in my team access to kubernetes cluster, without adminitrator role.<br>for example: the developer member can deploy app into <code>dev</code> namespace only.<br>How do resolve it?<br><code>UserAccount</code>, <code>ClusterRole</code>, <code>Role</code>, these objects are solutions.<br>in this post, i take a note <code>how to make sure a user has the right permissions towards the right resources using the Role-Based Access Control model.</code><br><i>its definition will be skipped </i></p>
+<p>brief steps:</p>
+<ul>
+<li>Create a x509 certificate file</li>
+<li>Request signing process to k8s cluster</li>
+<li>approve certificate and get certificated file</li>
+<li>create role, rolebinding properly: view pods only</li>
+<li>setting local context </li>
+<li>verify: the created user can not operate anything except for getting list of pods</li>
+</ul>
+<hr>
 <p>there are two concepts but Kubernetes does not have objects which represent normal user accounts. Normal users cannot be added to a cluster through an API call.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User account is for humans. </span><br><span class="line">Service account is for processes, which run in pods.</span><br></pre></td></tr></table></figure>
 
