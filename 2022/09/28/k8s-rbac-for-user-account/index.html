@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Create an invidual account, and assign the right permissions in k8s | Monkey Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="in a project, we have to manage a Kubernetes on premise - not in cloud.we need to give people in my team access to kubernetes cluster, without adminitrator role.for example: the developer member can d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Create an invidual account, and assign the right permissions in k8s">
+<meta property="og:url" content="https://monkey192.github.io/2022/09/28/k8s-rbac-for-user-account/index.html">
+<meta property="og:site_name" content="Monkey Blog">
+<meta property="og:description" content="in a project, we have to manage a Kubernetes on premise - not in cloud.we need to give people in my team access to kubernetes cluster, without adminitrator role.for example: the developer member can d">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-28T01:46:37.000Z">
+<meta property="article:modified_time" content="2022-09-28T03:33:30.704Z">
+<meta property="article:author" content="Monkey192">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Monkey Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Monkey Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">My notes &amp; Sharing</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://monkey192.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-k8s-rbac-for-user-account" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/28/k8s-rbac-for-user-account/" class="article-date">
+  <time class="dt-published" datetime="2022-09-28T01:46:37.000Z" itemprop="datePublished">2022-09-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Create an invidual account, and assign the right permissions in k8s
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>in a project, we have to manage a Kubernetes on premise - not in cloud.<br>we need to give people in my team access to kubernetes cluster, without adminitrator role.<br>for example: the developer member can deploy app into <code>dev</code> namespace only.<br>How do resolve it?<br><code>UserAccount</code>, <code>ClusterRole</code>, <code>Role</code>, these objects are solutions.<br>in this post, i take a note <code>how to make sure a user has the right permissions towards the right resources using the Role-Based Access Control model.</code><br><i>its definition will be skipped </i></p>
+<p>there are two concepts but Kubernetes does not have objects which represent normal user accounts. Normal users cannot be added to a cluster through an API call.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User account is for humans. </span><br><span class="line">Service account is for processes, which run in pods.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Creating-individual-certificates-for-cluster-users"><a href="#Creating-individual-certificates-for-cluster-users" class="headerlink" title="Creating individual certificates for cluster users"></a>Creating individual certificates for cluster users</h3><ul>
+<li>Create private key</li>
+</ul>
+<p>(i have no knowledge about these keys, they are ambiguous).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">the most easiest to understand article.</span><br><span class="line">https://qiita.com/miyuki_samitani/items/e038e2ca7d8b6443657d</span><br><span class="line"></span><br><span class="line">申込者が秘密鍵の作成</span><br><span class="line">秘密鍵 + ディスティングイッシュネーム(申込者の情報) = CSRファイルを生成</span><br><span class="line">認証局の申請の際にCSRをつけて申し込み</span><br><span class="line">認証局はCSRのディスティングイッシュネームと申込者の情報が一致するか確認する</span><br><span class="line">認証局は証明書に署名を行い、証明書を発行する</span><br><span class="line">認証局が申込者に証明書、秘密鍵、中間証明書を送る</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out monkey192.pem 2048</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line">total 8</span><br><span class="line">-rw-r--r--  1 monkey192  staff  1679 Sep 28 11:18 monkey192.pem</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>Create CSR file (Certificate Sign Requesting)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -key monkey192.pem -out monkey192.csr -subj <span class="string">&quot;/CN=dev&quot;</span></span><br><span class="line"></span><br><span class="line">-rw-r--r--  1 monkey192  staff   883 Sep 28 11:21 monkey192.csr</span><br><span class="line">-rw-r--r--  1 monkey192  staff  1679 Sep 28 11:18 monkey192.pem</span><br></pre></td></tr></table></figure></li>
+<li><p>convert csr file to base64 text</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat knqyf263.csr | base64 | tr -d <span class="string">&#x27;\n&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>Request signing process to k8s cluster</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&lt;&lt;EOF</span> <span class="string">|</span> <span class="string">kubectl</span> <span class="string">apply</span> <span class="string">-f</span> <span class="bullet">-</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">certificates.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CertificateSigningRequest</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">monkey192-request</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">request:</span> <span class="string">&lt;the</span> <span class="string">above</span> <span class="string">csr&#x27;s</span> <span class="string">base64</span> <span class="string">text&gt;</span></span><br><span class="line">  <span class="attr">signerName:</span> <span class="string">kubernetes.io/kube-apiserver-client</span></span><br><span class="line">  <span class="attr">expirationSeconds:</span> <span class="number">86400</span>  <span class="comment"># one day</span></span><br><span class="line">  <span class="attr">usages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">client</span> <span class="string">auth</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certificatesigningrequest.certificates.k8s.io/monkey192-request created</span><br></pre></td></tr></table></figure></li>
+<li><p>Approve certificate signing reques</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get csr</span><br><span class="line">NAME                AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION</span><br><span class="line">monkey192-request   54s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl certificate approve monkey192-request</span><br><span class="line">certificatesigningrequest.certificates.k8s.io/monkey192-request approved</span><br></pre></td></tr></table></figure></li>
+<li><p>Get the certificate from the CSR:<br>The certificate value is in Base64-encoded format under status.certificate.<br>Export the issued certificate from the CertificateSigningRequest.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get csr monkey192-request -o jsonpath=&#x27;&#123;.status.certificate&#125;&#x27; | base64 -d &gt; monkey192.crt</span><br></pre></td></tr></table></figure></li>
+<li><p>setting your local kubectl context</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kubectl config set-cluster kubernetes --insecure-skip-tls-verify=<span class="literal">true</span> --server=&lt;your cluster endpoint&gt;</span><br><span class="line">kubectl config set-credentials monkey192 --client-certificate=monkey192.crt --client-key=monkey192.pem --embed-certs=<span class="literal">true</span></span><br><span class="line">kubectl config set-context developer --cluster=kubernetes --user=monkey192</span><br><span class="line">Cluster <span class="string">&quot;kubernetes&quot;</span> <span class="built_in">set</span>.</span><br><span class="line">User <span class="string">&quot;monkey192&quot;</span> <span class="built_in">set</span>.</span><br><span class="line">Context <span class="string">&quot;developer&quot;</span> created.</span><br></pre></td></tr></table></figure></li>
+<li><p>swicth to created context</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl config use-context developer</span><br><span class="line">Switched to context <span class="string">&quot;developer&quot;</span>.</span><br></pre></td></tr></table></figure></li>
+<li><p>try get pods</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods</span><br><span class="line">Error from server (Forbidden): pods is forbidden: User &quot;dev&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;******&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>create ClusterRole &amp; ClusterRoleBinding<br>for demonstration, i just create a role which allow view pods only</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">clusterrole-view-only</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">  <span class="attr">resources:</span> [<span class="string">&quot;pods&quot;</span>]</span><br><span class="line">  <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;list&quot;</span>]</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>assign ClusterRole to <code>dev</code> user</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">clusterrolebinding-monkey192</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">User</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">clusterrole-view-only</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br></pre></td></tr></table></figure></li>
+<li><p>try to get pods list </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods</span><br><span class="line">NAME                                  READY   STATUS    RESTARTS   AGE</span><br><span class="line">elasticsearch-565dfb8c5f-gj4d9        1/1     Running   1          18h</span><br></pre></td></tr></table></figure>
+<p>everthing is going on!</p>
+</li>
+<li><p>try to get list services</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl get services</span><br><span class="line">Error from server (Forbidden): services is forbidden: User &quot;dev&quot; cannot list resource &quot;services&quot; in API group &quot;&quot; in the namespace &quot;******&quot;</span><br></pre></td></tr></table></figure>
+<p>the <code>dev</code> user can not get list of services, because the associated role is not allowed</p>
+</li>
+</ul>
+<p>when using k8s, there are many things need to discover for improvement security.<br>All in all, create users for Kubernetes clusters without giving everyone the admin certificate is the best security practice.<br>and <i>this is a note for me!</i></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://monkey192.github.io/2022/09/28/k8s-rbac-for-user-account/" data-id="cl8kzjaf80000cuos5h2ybhhp" data-title="Create an invidual account, and assign the right permissions in k8s" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/09/07/nginx-enable-basic-authentication/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">nginx: enable basic authentication</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/k8s/">k8s</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ms932/" rel="tag">Ms932</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unicode/" rel="tag">Unicode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/angular/" rel="tag">angular</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aws/" rel="tag">aws</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basic-auth/" rel="tag">basic auth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker-swarm/" rel="tag">docker-swarm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elkstack/" rel="tag">elkstack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/" rel="tag">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heml/" rel="tag">heml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/s3/" rel="tag">s3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/" rel="tag">ssh</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Ms932/" style="font-size: 10px;">Ms932</a> <a href="/tags/Unicode/" style="font-size: 10px;">Unicode</a> <a href="/tags/angular/" style="font-size: 10px;">angular</a> <a href="/tags/aws/" style="font-size: 10px;">aws</a> <a href="/tags/basic-auth/" style="font-size: 10px;">basic auth</a> <a href="/tags/docker/" style="font-size: 20px;">docker</a> <a href="/tags/docker-swarm/" style="font-size: 10px;">docker-swarm</a> <a href="/tags/elkstack/" style="font-size: 10px;">elkstack</a> <a href="/tags/github/" style="font-size: 15px;">github</a> <a href="/tags/heml/" style="font-size: 10px;">heml</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/s3/" style="font-size: 10px;">s3</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/28/k8s-rbac-for-user-account/">Create an invidual account, and assign the right permissions in k8s</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/07/nginx-enable-basic-authentication/">nginx: enable basic authentication</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/01/docker-Q-A/">docker Q&amp;A</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/26/k8s-volume/">k8s-volume</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/23/s3-cli-cheatsheet/">s3-cli-cheatsheet</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+        <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a></br>
+All website licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></br>
+      
+      &copy; 2022 Monkey192<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
