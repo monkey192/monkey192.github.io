@@ -12,6 +12,15 @@ How do resolve it?
 in this post, i take a note `how to make sure a user has the right permissions towards the right resources using the Role-Based Access Control model.`
 <i>its definition will be skipped </i>
   
+brief steps:
+- Create a x509 certificate file
+- Request signing process to k8s cluster
+- approve certificate and get certificated file
+- create role, rolebinding properly: view pods only
+- setting local context 
+- verify: the created user can not operate anything except for getting list of pods
+---
+  
 there are two concepts but Kubernetes does not have objects which represent normal user accounts. Normal users cannot be added to a cluster through an API call.
 ```
 User account is for humans. 
